@@ -5,4 +5,5 @@ Future<void> _servicesSetup() async {
     final appDirectory = await getApplicationDocumentsDirectory();
     return openStore(directory: join(appDirectory.path, "database"));
   });
+  await _getIt.isReady<Store>();
 }
