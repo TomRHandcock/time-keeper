@@ -25,6 +25,8 @@ dependencies:
   objectbox: ^2.5.1
   objectbox_flutter_libs: any
   auto_route: ^8.0.2
+  path_provider: ^2.1.2
+  path: ^1.9.0
 
 dev_dependencies:
   flutter_test:
