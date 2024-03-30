@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get_it/get_it.dart';
 import 'package:time_keeper/src/ui/screens/duration_setter/cubit/duration_setter_cubit.dart';
 import 'package:time_keeper/src/ui/screens/duration_setter/cubit/duration_setter_state.dart';
+import 'package:time_keeper/src/ui/widgets/animation/animated_state.dart';
 
 @RoutePage()
 class DurationSetterScreen extends StatelessWidget implements AutoRouteWrapper {
@@ -44,15 +45,18 @@ class DurationSetterContent extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: switch (state) {
-        DurationSetterStateInitial() ||
-        DurationSetterStateFetching() =>
-          const _Loading(),
-        DurationSetterStateReady(:final data) ||
-        DurationSetterStateSubmitting(:final data) ||
-        DurationSetterStateSubmitted(:final data) =>
-          _Data(data: data),
-      },
+      body: AnimatedState(
+        targetValue: state,
+        builder: (context, targetValue) => switch (targetValue) {
+          DurationSetterStateInitial() ||
+          DurationSetterStateFetching() =>
+            const _Loading(),
+          DurationSetterStateReady(:final data) ||
+          DurationSetterStateSubmitting(:final data) ||
+          DurationSetterStateSubmitted(:final data) =>
+            _Data(data: data),
+        },
+      ),
     );
   }
 }
