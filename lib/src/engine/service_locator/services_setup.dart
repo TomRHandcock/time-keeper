@@ -6,4 +6,7 @@ Future<void> _servicesSetup() async {
     return openStore(directory: join(appDirectory.path, "database"));
   });
   await _getIt.isReady<Store>();
+  _getIt.registerLazySingleton<TrackingPreferenceService>(
+    () => TrackingPreferenceServiceImpl(_getIt.get()),
+  );
 }
