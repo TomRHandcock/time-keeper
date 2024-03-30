@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:time_keeper/src/engine/router/router.dart';
+import 'package:time_keeper/src/engine/service_locator/root_setup.dart';
 
-void main() {
+void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  await rootSetup();
   runApp(App());
 }
 
