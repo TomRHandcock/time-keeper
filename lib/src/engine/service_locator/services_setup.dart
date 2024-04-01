@@ -9,4 +9,5 @@ Future<void> _servicesSetup() async {
   _getIt.registerLazySingleton<TrackingPreferenceService>(
     () => TrackingPreferenceServiceImpl(_getIt.get()),
   );
+  _getIt.registerLazySingleton(() => TrackingPreferenceCache());
 }
