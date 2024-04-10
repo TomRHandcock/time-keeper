@@ -1,4 +1,4 @@
-import 'package:objectbox/objectbox.dart';
+import 'package:isar/isar.dart';
 import 'package:time_keeper/src/engine/feature/tracking_preference/models.dart';
 import 'package:time_keeper/src/engine/utils/transform_utils.dart';
 
@@ -11,24 +11,24 @@ abstract class TrackingPreferenceService {
 }
 
 class TrackingPreferenceServiceImpl implements TrackingPreferenceService {
-  late final Store _store;
+  final Isar isar;
 
-  Box<TrackingPreferenceRecord> get _box => _store.box();
+  IsarCollection<TrackingPreferenceRecord> get collection => isar.collection();
 
-  TrackingPreferenceServiceImpl(this._store);
-
-  @override
-  Future<void> clearPreference() => _box.removeAllAsync();
+  TrackingPreferenceServiceImpl(this.isar);
 
   @override
-  Future<TrackingPreference?> getPreference() => _box.getAsync(0).then(
-        (result) => result?.let(
-          (it) => TrackingPreference.fromRecord(it),
-        ),
-      );
+  Future<void> clearPreference() => collection.clear();
 
   @override
-  Future<void> setPreference(TrackingPreference preference) => _box.putAsync(
-    preference.toRecord(),
-  );
+  Future<TrackingPreference?> getPreference() =>
+      collection.get(TrackingPreferenceRecord.staticId).then(
+            (result) => result?.let(
+              (record) => TrackingPreference.fromRecord(record),
+            ),
+          );
+
+  @override
+  Future<void> setPreference(TrackingPreference preference) =>
+      collection.put(preference.toRecord());
 }

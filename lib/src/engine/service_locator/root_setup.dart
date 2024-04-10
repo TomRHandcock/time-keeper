@@ -1,7 +1,10 @@
 import 'package:get_it/get_it.dart';
+import 'package:isar/isar.dart';
 import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart';
-import 'package:time_keeper/config/objectbox/objectbox.g.dart';
+import 'package:time_keeper/src/engine/feature/tracking/models.dart';
+import 'package:time_keeper/src/engine/feature/tracking/tracking_session_store.dart';
+import 'package:time_keeper/src/engine/feature/tracking_preference/models.dart';
 import 'package:time_keeper/src/engine/feature/tracking_preference/tracking_preference_cache.dart';
 import 'package:time_keeper/src/engine/feature/tracking_preference/tracking_preference_repository.dart';
 import 'package:time_keeper/src/engine/feature/tracking_preference/tracking_preference_store.dart';

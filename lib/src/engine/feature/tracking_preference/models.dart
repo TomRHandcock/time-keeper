@@ -1,18 +1,10 @@
-import 'package:objectbox/objectbox.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:isar/isar.dart';
 import 'package:time_keeper/src/engine/utils/duration_parser.dart';
 
 part 'models.freezed.dart';
 
-@Entity()
-class TrackingPreferenceRecord {
-  @Id()
-  int id = 0;
-
-  String duration;
-
-  TrackingPreferenceRecord(this.id, this.duration);
-}
+part 'models.g.dart';
 
 @freezed
 class TrackingPreference with _$TrackingPreference {
@@ -22,13 +14,22 @@ class TrackingPreference with _$TrackingPreference {
     required Duration duration,
   }) = _TrackingPreference;
 
-  TrackingPreferenceRecord toRecord() => TrackingPreferenceRecord(
-        0,
-        DurationParser.serialise(duration),
-      );
-
   factory TrackingPreference.fromRecord(TrackingPreferenceRecord record) =>
       TrackingPreference(
         duration: DurationParser.parse(record.duration),
       );
+
+  TrackingPreferenceRecord toRecord() =>
+      TrackingPreferenceRecord(DurationParser.serialise(duration));
+}
+
+@Collection()
+class TrackingPreferenceRecord {
+
+  static const staticId = 0;
+  Id id = TrackingPreferenceRecord.staticId;
+
+  String duration;
+
+  TrackingPreferenceRecord(this.duration);
 }
