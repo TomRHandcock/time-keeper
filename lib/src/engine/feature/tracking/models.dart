@@ -1,6 +1,5 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:isar/isar.dart';
-import 'package:time_keeper/src/engine/utils/transform_utils.dart';
 
 part 'models.freezed.dart';
 
@@ -11,11 +10,13 @@ class TrackingSession with _$TrackingSession {
   const TrackingSession._();
 
   const factory TrackingSession({
+    required int id,
     required List<TrackingPoint> points,
   }) = _TrackingSession;
 
   factory TrackingSession.fromRecord(TrackingSessionRecord record) =>
       TrackingSession(
+        id: record.id,
         points: record.points
             .map((point) => TrackingPoint.fromRecord(point))
             .whereType<TrackingPoint>()
@@ -24,6 +25,7 @@ class TrackingSession with _$TrackingSession {
 
   TrackingSessionRecord toRecord() => TrackingSessionRecord(
         points.map((point) => point.toRecord()).toList(),
+        id,
       );
 }
 
@@ -50,10 +52,10 @@ class TrackingPoint with _$TrackingPoint {
 
 @collection
 class TrackingSessionRecord {
-  Id id = Isar.autoIncrement;
+  Id id;
   List<TrackingPointRecord> points;
 
-  TrackingSessionRecord(this.points);
+  TrackingSessionRecord(this.points, [this.id = Isar.autoIncrement]);
 }
 
 @embedded
