@@ -26,6 +26,6 @@ class TrackingPreferenceRepositoryImpl implements TrackingPreferenceRepository {
   @override
   Future<void> setPreference(TrackingPreference preference) async {
     _preferenceCache.setValue(preference).ignore();
-    _preferenceService.setPreference(preference);
+    await _preferenceService.setPreference(preference);
   }
 }
