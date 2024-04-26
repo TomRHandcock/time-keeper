@@ -29,6 +29,7 @@ class TrackingPreferenceServiceImpl implements TrackingPreferenceService {
           );
 
   @override
-  Future<void> setPreference(TrackingPreference preference) =>
-      collection.put(preference.toRecord());
+  Future<void> setPreference(TrackingPreference preference) async => isar.writeTxn(() async {
+    collection.put(preference.toRecord());
+  });
 }
