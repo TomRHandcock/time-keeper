@@ -4,7 +4,9 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get_it/get_it.dart';
 import 'package:time_keeper/src/ui/screens/duration_setter/cubit/duration_setter_cubit.dart';
 import 'package:time_keeper/src/ui/screens/duration_setter/cubit/duration_setter_state.dart';
+import 'package:time_keeper/src/ui/screens/duration_setter/widgets/duration_picker.dart';
 import 'package:time_keeper/src/ui/widgets/animation/animated_state.dart';
+import 'package:time_keeper/src/ui/widgets/time_keeper_button.dart';
 
 @RoutePage()
 class DurationSetterScreen extends StatelessWidget implements AutoRouteWrapper {
@@ -12,10 +14,12 @@ class DurationSetterScreen extends StatelessWidget implements AutoRouteWrapper {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<DurationSetterCubit, DurationSetterState>(
+    return BlocConsumer<DurationSetterCubit, DurationSetterState>(
+      listener: _onStateUpdate,
       builder: (_, state) => DurationSetterContent(
         state: state,
         onDurationUpdated: (duration) => _onDurationUpdated(context, duration),
+        onSubmitted: () => _onSubmitted(context),
       ),
     );
   }
@@ -27,18 +31,30 @@ class DurationSetterScreen extends StatelessWidget implements AutoRouteWrapper {
         child: this,
       );
 
+  _onStateUpdate(BuildContext context, DurationSetterState state) {
+    if(state is DurationSetterStateSubmitted) {
+      AutoRouter.of(context).maybePop();
+    }
+  }
+
   _onDurationUpdated(BuildContext context, Duration duration) {
     context.read<DurationSetterCubit>().updatePreference(duration);
+  }
+
+  _onSubmitted(BuildContext context) {
+    context.read<DurationSetterCubit>().setPreference();
   }
 }
 
 class DurationSetterContent extends StatelessWidget {
   final DurationSetterState state;
   final Function(Duration duration)? onDurationUpdated;
+  final Function()? onSubmitted;
 
   const DurationSetterContent({
     required this.state,
     this.onDurationUpdated,
+    this.onSubmitted,
     super.key,
   });
 
@@ -47,6 +63,8 @@ class DurationSetterContent extends StatelessWidget {
     return Scaffold(
       body: AnimatedState(
         targetValue: state,
+        buildWhen: (oldValue, newValue) =>
+            oldValue.runtimeType != newValue.runtimeType,
         builder: (context, targetValue) => switch (targetValue) {
           DurationSetterStateInitial() ||
           DurationSetterStateFetching() =>
@@ -54,7 +72,11 @@ class DurationSetterContent extends StatelessWidget {
           DurationSetterStateReady(:final data) ||
           DurationSetterStateSubmitting(:final data) ||
           DurationSetterStateSubmitted(:final data) =>
-            _Data(data: data),
+            _Data(
+              data: data,
+              onDurationChanged: onDurationUpdated,
+              onSubmitted: onSubmitted,
+            ),
         },
       ),
     );
@@ -74,24 +96,43 @@ class _Loading extends StatelessWidget {
 
 class _Data extends StatelessWidget {
   final DurationSetterStateData data;
+  final Function(Duration duration)? onDurationChanged;
+  final Function()? onSubmitted;
 
-  const _Data({required this.data});
+  const _Data({
+    required this.data,
+    this.onDurationChanged,
+    this.onSubmitted,
+  });
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.stretch,
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        const Text(
-          "Current duration:",
-          textAlign: TextAlign.center,
-        ),
-        Text(
-          data.durationPreference.toString(),
-          textAlign: TextAlign.center,
-        ),
-      ],
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          const Padding(
+            padding: EdgeInsets.all(8.0),
+            child: Text(
+              "Select time keeping duration",
+              textAlign: TextAlign.center,
+            ),
+          ),
+          DurationPicker(
+            duration: data.durationPreference,
+            onDurationUpdated: onDurationChanged,
+          ),
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: TimeKeeperButton(
+              label: "Submit",
+              onPressed: () => onSubmitted?.call(),
+            ),
+          ),
+        ],
+      ),
     );
   }
 }
