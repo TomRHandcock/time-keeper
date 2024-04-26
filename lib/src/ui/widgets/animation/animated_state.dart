@@ -5,6 +5,7 @@ import 'package:flutter/widgets.dart';
 class AnimatedState<T> extends StatefulWidget {
   final T targetValue;
   final Widget Function(BuildContext context, T target) builder;
+  final bool Function(T oldValue, T newValue)? buildWhen;
   final Duration duration;
   final bool crossfade;
 
@@ -13,6 +14,7 @@ class AnimatedState<T> extends StatefulWidget {
     required this.builder,
     this.duration = const Duration(milliseconds: 500),
     this.crossfade = false,
+    this.buildWhen,
     super.key,
   });
 
@@ -27,10 +29,13 @@ class _AnimatedStateState<T> extends State<AnimatedState<T>>
   late T _targetValue;
   bool _animationInProgress = false;
 
-  double get _currentOpacity => widget.crossfade ?
-      1.0 - _animation.value : (1 - _animation.value * 2).clamp(0.0, 1.0);
-  double get _targetOpacity => widget.crossfade ?
-      _animation.value : (2 * _animation.value - 1).clamp(0.0, 1.0);
+  double get _currentOpacity => widget.crossfade
+      ? 1.0 - _animation.value
+      : (1 - _animation.value * 2).clamp(0.0, 1.0);
+
+  double get _targetOpacity => widget.crossfade
+      ? _animation.value
+      : (2 * _animation.value - 1).clamp(0.0, 1.0);
 
   @override
   void initState() {
@@ -47,7 +52,10 @@ class _AnimatedStateState<T> extends State<AnimatedState<T>>
   @override
   void didUpdateWidget(covariant AnimatedState<T> oldWidget) {
     super.didUpdateWidget(oldWidget);
-    if (_currentValue != widget.targetValue) {
+    final shouldRebuild =
+        widget.buildWhen?.call(_currentValue, widget.targetValue) ??
+            _currentValue != _targetOpacity;
+    if (shouldRebuild) {
       _targetValue = widget.targetValue;
       _restartAnimation();
     }
@@ -100,7 +108,7 @@ class _AnimatedStateState<T> extends State<AnimatedState<T>>
                 opacity: _currentOpacity,
                 child: widget.builder(context, _currentValue),
               ),
-              if (_animation.value < 1)
+              if (_animation.value > 0)
                 Opacity(
                   opacity: _targetOpacity,
                   child: widget.builder(context, _targetValue),
