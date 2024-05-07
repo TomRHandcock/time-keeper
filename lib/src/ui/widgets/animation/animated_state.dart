@@ -63,8 +63,9 @@ class _AnimatedStateState<T> extends State<AnimatedState<T>>
 
   @override
   dispose() {
-    super.dispose();
+    _animation.removeStatusListener(_animationStatusListener);
     _animation.dispose();
+    super.dispose();
   }
 
   _animationStatusListener(AnimationStatus state) {
