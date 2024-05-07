@@ -1,0 +1,113 @@
+{
+  "_note1": "KEEP THIS FILE! Check it into a version control system (VCS) like git.",
+  "_note2": "ObjectBox manages crucial IDs for your object model. See docs for details.",
+  "_note3": "If you have VCS merge conflicts, you must resolve them according to ObjectBox docs.",
+  "entities": [
+    {
+      "id": "2:3883947504468401910",
+      "lastPropertyId": "6:1460113897673369556",
+      "name": "TrackingPreferenceRecord",
+      "properties": [
+        {
+          "id": "1:7682446726800146691",
+          "name": "id",
+          "type": 6,
+          "flags": 1
+        },
+        {
+          "id": "6:1460113897673369556",
+          "name": "duration",
+          "type": 9
+        }
+      ],
+      "relations": []
+    },
+    {
+      "id": "9:119580966131586000",
+      "lastPropertyId": "4:7442794386611907438",
+      "name": "TrackingPointRecord",
+      "properties": [
+        {
+          "id": "1:3911409512253997975",
+          "name": "id",
+          "type": 6,
+          "flags": 1
+        },
+        {
+          "id": "2:7426626701303749210",
+          "name": "isStart",
+          "type": 1
+        },
+        {
+          "id": "3:1216404955035246440",
+          "name": "dateTime",
+          "type": 10
+        },
+        {
+          "id": "4:7442794386611907438",
+          "name": "recordId",
+          "type": 11,
+          "flags": 520,
+          "indexId": "3:7080536357720884086",
+          "relationTarget": "TrackingRecord"
+        }
+      ],
+      "relations": []
+    },
+    {
+      "id": "10:1045216353881976678",
+      "lastPropertyId": "1:6082574901873678262",
+      "name": "TrackingRecord",
+      "properties": [
+        {
+          "id": "1:6082574901873678262",
+          "name": "id",
+          "type": 6,
+          "flags": 1
+        }
+      ],
+      "relations": []
+    }
+  ],
+  "lastEntityId": "10:1045216353881976678",
+  "lastIndexId": "3:7080536357720884086",
+  "lastRelationId": "1:7115204600938698656",
+  "lastSequenceId": "0:0",
+  "modelVersion": 5,
+  "modelVersionParserMinimum": 5,
+  "retiredEntityUids": [
+    4967547705427168550,
+    3650233224479918750,
+    3191565339456337268,
+    5721189872306314015,
+    3246496102101431942,
+    1104686119114309021,
+    942790767466201
+  ],
+  "retiredIndexUids": [],
+  "retiredPropertyUids": [
+    804408239618367786,
+    5739620120846029618,
+    3063269764016349168,
+    323884064547173964,
+    222791491636196037,
+    4865605993371286515,
+    2901288401995620758,
+    7536668933705870669,
+    4582425392078859811,
+    178023849816495013,
+    5150861467978557905,
+    1669473469351605148,
+    2340211106017780868,
+    6661746097990881986,
+    711626870331620351,
+    1173717602754383434,
+    7203423499211384517,
+    13076654248902214,
+    7619486376111234375
+  ],
+  "retiredRelationUids": [
+    7115204600938698656
+  ],
+  "version": 1
+}
